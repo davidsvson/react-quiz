@@ -1,14 +1,25 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 
 const Game = (props) => {
     const questions = getQuestions();
 
-    const [currentQuestion, setCurrentQuestion] = useState(0);
+   // const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
+    let currentQuestion = 1;
 
-    const question = questions[currentQuestion];
+    const navigate = useNavigate();
+    const params = useParams();
+
+    if( 'currentquestion' in params) {
+        if (params.currentquestion > 0 && params.currentquestion <= questions.length) {
+            currentQuestion = Number(params.currentquestion);
+        }
+    }
+
+    const question = questions[currentQuestion - 1];
 
     const options = question.answers.map((answer, index) => (
         <p className="option" key={index}> 
@@ -23,9 +34,11 @@ const Game = (props) => {
         }
 
         if ( currentQuestion < questions.length - 1) {
-            setCurrentQuestion(currentQuestion + 1);
+           // setCurrentQuestion(currentQuestion + 1);
+           navigate("/game/"+(currentQuestion + 1));
         } else {
-            props.showResult();
+            //props.showResult();
+            navigate("/result");
         }
 
     }
